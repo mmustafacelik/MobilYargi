@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobilyargi/pages/LoginPage/LoginPage.dart';
+import 'package:mobilyargi/pages/RegisteryPage/RegisteryPage.dart';
 
 void main() {
   runApp(const MaterialApp(home: MyApp()));
@@ -22,7 +23,7 @@ class _MyAppState extends State<MyApp> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => LoginPage(),
+            builder: (context) => RegisteryPage(),
           ),
         );
       }),
