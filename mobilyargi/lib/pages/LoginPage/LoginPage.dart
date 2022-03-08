@@ -10,6 +10,7 @@ class LoginPage extends StatelessWidget {
   final GlobalKey<FormState> _formKey = GlobalKey();
   TextEditingController emailcontroller = TextEditingController();
   TextEditingController passwordcontroller = TextEditingController();
+  final LoginpageCubit _cubit = LoginpageCubit();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -70,7 +71,7 @@ class LoginPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(top: 50, left: 20),
                           child: Text(
-                            "Hoşgeldiniz",
+                            "Hoş Geldiniz",
                             style: GoogleFonts.montserrat(
                               textStyle: TextStyle(
                                 color: Colors.white,

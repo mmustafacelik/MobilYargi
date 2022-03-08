@@ -3,7 +3,12 @@ import 'package:mobilyargi/pages/LoginPage/LoginPage.dart';
 import 'package:mobilyargi/pages/RegisteryPage/RegisteryPage.dart';
 
 void main() {
-  runApp(const MaterialApp(home: MyApp()));
+  runApp(
+    const MaterialApp(
+      home: MyApp(),
+      debugShowCheckedModeBanner: false,
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
