@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:meta/meta.dart';
-import 'package:mobilyargi/pages/RegisteryPage/cubit/registerypage_cubit.dart';
+import 'package:flutter/material.dart';
 
 part 'loginpage_state.dart';
 

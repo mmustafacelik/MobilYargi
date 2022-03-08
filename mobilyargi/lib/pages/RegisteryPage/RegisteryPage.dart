@@ -248,10 +248,9 @@ class passwordField extends StatelessWidget {
         prefixIcon: Icon(Icons.password),
         suffixIcon: IconButton(
           icon: Icon(
-              //!Buraya visibility off yapılacak
-              Icons.visibility
-              // : Icons.visibility_off,
-              ),
+            //!Buraya visibility off yapılacak
+            Icons.visibility,
+          ),
           onPressed: () {},
         ),
       ),
