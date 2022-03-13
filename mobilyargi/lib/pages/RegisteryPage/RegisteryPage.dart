@@ -1,6 +1,10 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobilyargi/componenets/Text_field/Passwordtextformfield.dart';
+import 'package:mobilyargi/pages/LoginPage/LoginPage.dart';
 
 import 'cubit/registerypage_cubit.dart';
 
@@ -9,6 +13,11 @@ class RegisteryPage extends StatelessWidget {
   TextEditingController _emailcontroller = TextEditingController();
   TextEditingController _passwordcontroller = TextEditingController();
   TextEditingController _secondpasswordcontroller = TextEditingController();
+  GlobalKey _passwordFieldKey = GlobalKey<FormFieldState<String>>();
+  GlobalKey _againpasswordFieldKey = GlobalKey<FormFieldState<String>>();
+  late String _password;
+  late String _againpassword;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -60,7 +69,7 @@ class RegisteryPage extends StatelessWidget {
                     ),
                     color: Color.fromARGB(230, 61, 14, 205),
                   ),
-                  height: 600,
+                  height: 400,
                   width: MediaQuery.of(context).size.width,
                   child: Form(
                     key: _formKey,
@@ -107,7 +116,15 @@ class RegisteryPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        passwordField(passwordcontroller: _passwordcontroller),
+                        PasswordField(
+                          fieldKey: _passwordFieldKey,
+                          onFieldSubmitted: (String value) {
+                            {
+                              _password = value;
+                            }
+                            ;
+                          },
+                        ),
                         Padding(
                           padding: const EdgeInsets.only(top: 20, left: 20),
                           child: Text(
@@ -120,20 +137,64 @@ class RegisteryPage extends StatelessWidget {
                             ),
                           ),
                         ),
-                        passwordField(
-                            passwordcontroller: _secondpasswordcontroller),
+                        PasswordField(
+                          fieldKey: _againpasswordFieldKey,
+                          labelText: 'Yukarıdaki parolayı tekrar giriniz',
+                          onFieldSubmitted: (String value) {
+                            {
+                              _againpassword = value;
+                            }
+                            ;
+                          },
+                        ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             InkWell(
                               child: registeryButton(),
                               //ToDo:Backend
-                              onTap: () {},
+                              onTap: () {
+                                final bool isValid = EmailValidator.validate(
+                                    _emailcontroller.text);
+                                if (isValid) {
+                                  if (_password == _againpassword) {
+                                    //Todo:Local kontroller sonrası backend tarafı
+                                  } else {
+                                    Fluttertoast.showToast(
+                                        msg:
+                                            "Parolalar eşleşmiyor.Lütfen tekrar deneyiniz",
+                                        toastLength: Toast.LENGTH_SHORT,
+                                        gravity: ToastGravity.CENTER,
+                                        timeInSecForIosWeb: 2,
+                                        backgroundColor:
+                                            Color.fromARGB(255, 61, 77, 3),
+                                        textColor: Colors.blue,
+                                        fontSize: 16.0);
+                                  }
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg:
+                                          "Girdiğiniz mail geçersiz.Lütfen yeniden deneyiniz.",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      timeInSecForIosWeb: 2,
+                                      backgroundColor:
+                                          Color.fromARGB(255, 61, 77, 3),
+                                      textColor: Colors.blue,
+                                      fontSize: 16.0);
+                                }
+                              },
                             ),
                             GestureDetector(
                               child: loginButtons(),
                               //ToDo:Backend
-                              onTap: () {},
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginPage()),
+                                );
+                              },
                             ),
                           ],
                         ),
@@ -226,34 +287,6 @@ class EmailTextField extends StatelessWidget {
       ),
       keyboardType: TextInputType.emailAddress,
       autofillHints: [AutofillHints.email],
-    );
-  }
-}
-
-class passwordField extends StatelessWidget {
-  const passwordField({
-    Key? key,
-    required this.passwordcontroller,
-  }) : super(key: key);
-
-  final TextEditingController passwordcontroller;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      obscureText: true,
-      style: TextStyle(color: Colors.white),
-      controller: passwordcontroller,
-      decoration: InputDecoration(
-        prefixIcon: Icon(Icons.password),
-        suffixIcon: IconButton(
-          icon: Icon(
-            //!Buraya visibility off yapılacak
-            Icons.visibility,
-          ),
-          onPressed: () {},
-        ),
-      ),
     );
   }
 }
