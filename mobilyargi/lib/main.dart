@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobilyargi/pages/ForgotpasswordPage/ForgotPasswordPage.dart';
 import 'package:mobilyargi/pages/LoginPage/LoginPage.dart';
 import 'package:mobilyargi/pages/RegisteryPage/RegisteryPage.dart';
 

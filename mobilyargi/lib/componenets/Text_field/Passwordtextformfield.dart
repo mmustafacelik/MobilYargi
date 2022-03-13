@@ -40,7 +40,7 @@ class _PasswordFieldState extends State<PasswordField> {
         hintText: widget.hintText,
         labelText: widget.labelText,
         helperText: widget.helperText,
-        prefixIcon: Icon(Icons.password),
+        prefixIcon: const Icon(Icons.password),
         suffixIcon: GestureDetector(
           onTap: () {
             setState(() {
