@@ -10,11 +10,9 @@ import 'cubit/registerypage_cubit.dart';
 
 class RegisteryPage extends StatelessWidget {
   RegisteryPage({Key? key}) : super(key: key);
-  TextEditingController _emailcontroller = TextEditingController();
-  TextEditingController _passwordcontroller = TextEditingController();
-  TextEditingController _secondpasswordcontroller = TextEditingController();
-  GlobalKey _passwordFieldKey = GlobalKey<FormFieldState<String>>();
-  GlobalKey _againpasswordFieldKey = GlobalKey<FormFieldState<String>>();
+  final TextEditingController _emailcontroller = TextEditingController();
+  final GlobalKey _passwordFieldKey = GlobalKey<FormFieldState<String>>();
+  final GlobalKey _againpasswordFieldKey = GlobalKey<FormFieldState<String>>();
   late String _password;
   late String _againpassword;
 
@@ -25,7 +23,6 @@ class RegisteryPage extends StatelessWidget {
     );
   }
 
-//TODO:Sayfa Yönlendirilmeleri Yapılacak
   getBody(BuildContext context) {
     final GlobalKey<FormState> _formKey = GlobalKey();
     return BlocProvider(
@@ -57,7 +54,7 @@ class RegisteryPage extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 25,
               ),
               Expanded(
@@ -81,14 +78,14 @@ class RegisteryPage extends StatelessWidget {
                           child: Text(
                             "Hoş Geldiniz",
                             style: GoogleFonts.montserrat(
-                              textStyle: TextStyle(
+                              textStyle: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 20,
                         ),
                         Padding(
@@ -96,7 +93,7 @@ class RegisteryPage extends StatelessWidget {
                           child: Text(
                             "E-posta Adresiniz",
                             style: GoogleFonts.montserrat(
-                              textStyle: TextStyle(
+                              textStyle: const TextStyle(
                                 color: Colors.white54,
                                 fontSize: 14,
                               ),
@@ -109,7 +106,7 @@ class RegisteryPage extends StatelessWidget {
                           child: Text(
                             "Parola",
                             style: GoogleFonts.montserrat(
-                              textStyle: TextStyle(
+                              textStyle: const TextStyle(
                                 color: Colors.white54,
                                 fontSize: 14,
                               ),
@@ -122,7 +119,6 @@ class RegisteryPage extends StatelessWidget {
                             {
                               _password = value;
                             }
-                            ;
                           },
                         ),
                         Padding(
@@ -130,7 +126,7 @@ class RegisteryPage extends StatelessWidget {
                           child: Text(
                             "Parola Yeniden",
                             style: GoogleFonts.montserrat(
-                              textStyle: TextStyle(
+                              textStyle: const TextStyle(
                                 color: Colors.white54,
                                 fontSize: 14,
                               ),
@@ -144,14 +140,13 @@ class RegisteryPage extends StatelessWidget {
                             {
                               _againpassword = value;
                             }
-                            ;
                           },
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             InkWell(
-                              child: registeryButton(),
+                              child: const registeryButton(),
                               //ToDo:Backend
                               onTap: () {
                                 final bool isValid = EmailValidator.validate(
@@ -166,8 +161,8 @@ class RegisteryPage extends StatelessWidget {
                                         toastLength: Toast.LENGTH_SHORT,
                                         gravity: ToastGravity.CENTER,
                                         timeInSecForIosWeb: 2,
-                                        backgroundColor:
-                                            Color.fromARGB(255, 61, 77, 3),
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 61, 77, 3),
                                         textColor: Colors.blue,
                                         fontSize: 16.0);
                                   }
@@ -179,15 +174,14 @@ class RegisteryPage extends StatelessWidget {
                                       gravity: ToastGravity.CENTER,
                                       timeInSecForIosWeb: 2,
                                       backgroundColor:
-                                          Color.fromARGB(255, 61, 77, 3),
+                                          const Color.fromARGB(255, 61, 77, 3),
                                       textColor: Colors.blue,
                                       fontSize: 16.0);
                                 }
                               },
                             ),
                             GestureDetector(
-                              child: loginButtons(),
-                              //ToDo:Backend
+                              child: const loginButtons(),
                               onTap: () {
                                 Navigator.push(
                                   context,
@@ -219,7 +213,7 @@ class loginButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 20, left: 10),
+      margin: const EdgeInsets.only(top: 20, left: 10),
       width: MediaQuery.of(context).size.width / 5,
       height: 30,
       decoration: BoxDecoration(
@@ -230,7 +224,7 @@ class loginButtons extends StatelessWidget {
         child: Text(
           "Giriş Yap",
           style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: 14,
             ),
           ),
@@ -248,7 +242,7 @@ class registeryButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: 20, left: 10),
+      margin: const EdgeInsets.only(top: 20, left: 10),
       width: MediaQuery.of(context).size.width / 4,
       height: 30,
       decoration: BoxDecoration(
@@ -259,7 +253,7 @@ class registeryButton extends StatelessWidget {
         child: Text(
           "Kayıt Ol",
           style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontSize: 14,
             ),
           ),
@@ -280,13 +274,12 @@ class EmailTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: emailcontroller,
-      style: TextStyle(color: Colors.white),
-      decoration: InputDecoration(
+      style: const TextStyle(color: Colors.white),
+      decoration: const InputDecoration(
         prefixIcon: Icon(Icons.mail),
       ),
       keyboardType: TextInputType.emailAddress,
-      autofillHints: [AutofillHints.email],
+      autofillHints: const [AutofillHints.email],
     );
   }
 }
