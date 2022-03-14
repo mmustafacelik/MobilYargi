@@ -6,6 +6,7 @@ import 'package:mobilyargi/pages/HomePage/cubit/homepage_cubit.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:mobilyargi/pages/LoginPage/LoginPage.dart';
 import 'package:badges/badges.dart';
+import 'package:mobilyargi/pages/ProfilePage/ProfilePage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,6 +16,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int currentindex = 0;
+  final screens = [
+    Center(
+      child: Text(
+        "Home",
+        style: TextStyle(
+          fontSize: 60,
+        ),
+      ),
+    ),
+    Center(
+      child: Text(
+        "Inbox",
+        style: TextStyle(
+          fontSize: 60,
+        ),
+      ),
+    ),
+    Center(
+      child: Text(
+        "Star",
+        style: TextStyle(
+          fontSize: 60,
+        ),
+      ),
+    ),
+    ProfilePage(),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,10 +72,20 @@ class _HomePageState extends State<HomePage> {
         onTap: (index) {
           if (index == 0) {
             print("0");
+            currentindex = index;
+            setState(() {});
           } else if (index == 1) {
+            currentindex = index;
             print("1");
-          } else {
+            setState(() {});
+          } else if (index == 2) {
+            currentindex = index;
             print("2");
+            setState(() {});
+          } else {
+            currentindex = index;
+            print("3");
+            setState(() {});
           }
         },
       ),
@@ -92,7 +131,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: getBody(context),
+      body: getBody(context), //getBody(context),
     );
   }
 
@@ -110,8 +149,9 @@ class _HomePageState extends State<HomePage> {
                 fit: BoxFit.cover,
               ),
             ),
-            child: Column(
-              children: [],
+            child: IndexedStack(
+              index: currentindex,
+              children: screens,
             ),
           ),
         ),
