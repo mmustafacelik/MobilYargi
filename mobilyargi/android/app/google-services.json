@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "338186219160",
+    "project_id": "mobil-yargi",
+    "storage_bucket": "mobil-yargi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:338186219160:android:9a4cb570adc6a4a1556aed",
+        "android_client_info": {
+          "package_name": "com.example.mobilyargi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "338186219160-aenpq096fapess1076fio09kp4qe2ed9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.mobilyargi",
+            "certificate_hash": "690d7b0cfcf02500d70c1c03fdfe04b73a6ef7cb"
+          }
+        },
+        {
+          "client_id": "338186219160-eu9cfbebgndon8qchcj7fbicvl4n9jg3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDKT7NcaUkkRPGYLkxP5CsMYfEZfbi2CfM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "338186219160-eu9cfbebgndon8qchcj7fbicvl4n9jg3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

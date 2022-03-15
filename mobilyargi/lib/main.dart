@@ -3,8 +3,11 @@ import 'package:mobilyargi/pages/ForgotpasswordPage/ForgotPasswordPage.dart';
 import 'package:mobilyargi/pages/HomePage/Homepage.dart';
 import 'package:mobilyargi/pages/LoginPage/LoginPage.dart';
 import 'package:mobilyargi/pages/RegisteryPage/RegisteryPage.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     const MaterialApp(
       home: MyApp(),
@@ -30,7 +33,7 @@ class _MyAppState extends State<MyApp> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => HomePage(),
+            builder: (context) => RegisteryPage(),
           ),
         );
       }),

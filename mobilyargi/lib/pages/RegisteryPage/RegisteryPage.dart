@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -10,12 +12,11 @@ import 'cubit/registerypage_cubit.dart';
 
 class RegisteryPage extends StatelessWidget {
   RegisteryPage({Key? key}) : super(key: key);
-  final TextEditingController _emailcontroller = TextEditingController();
-  final GlobalKey _passwordFieldKey = GlobalKey<FormFieldState<String>>();
-  final GlobalKey _againpasswordFieldKey = GlobalKey<FormFieldState<String>>();
+
   late String _password;
   late String _againpassword;
-
+  String _email = "";
+  String _nickname = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,8 +24,44 @@ class RegisteryPage extends StatelessWidget {
     );
   }
 
+//todo: Firebase error fırlatmalarını yakala ve kontrol ettir
   getBody(BuildContext context) {
-    final GlobalKey<FormState> _formKey = GlobalKey();
+    final TextEditingController _emailcontroller = TextEditingController();
+    Future<void> kayitol() async {
+      try {
+        await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: _email, password: _password)
+            .then((kullanici) {
+          FirebaseFirestore.instance
+              .collection("Users")
+              .doc(_email)
+              .set({"UserNickname": _nickname, "UsersEmail": _email});
+        });
+      } catch (error) {
+        switch (error) {
+          case "email-already-in-use":
+            Fluttertoast.showToast(
+                msg: "Bu mail zaten kullanılıyor",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 2,
+                backgroundColor: const Color.fromARGB(255, 61, 77, 3),
+                textColor: Colors.blue,
+                fontSize: 16.0);
+            break;
+          default:
+            Fluttertoast.showToast(
+                msg: "Beklenmeyen bir hata oluştu sonra tekrar deneyiniz",
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 2,
+                backgroundColor: const Color.fromARGB(255, 61, 77, 3),
+                textColor: Colors.blue,
+                fontSize: 16.0);
+        }
+      }
+    }
+
     return BlocProvider(
       create: (context) => RegisterypageCubit(),
       child: SingleChildScrollView(
@@ -46,7 +83,7 @@ class RegisteryPage extends StatelessWidget {
                 child: Image.asset("assets/terazi.png"),
               ),
               Text(
-                "Mobil Yargı",
+                "Yargı Mobil",
                 style: GoogleFonts.pacifico(
                   textStyle: const TextStyle(
                     color: Color.fromARGB(255, 2, 165, 187),
@@ -68,96 +105,130 @@ class RegisteryPage extends StatelessWidget {
                   ),
                   height: 400,
                   width: MediaQuery.of(context).size.width,
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 50, left: 20),
-                          child: Text(
-                            "Hoş Geldiniz",
-                            style: GoogleFonts.montserrat(
-                              textStyle: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                              ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10, left: 20),
+                        child: Text(
+                          "Hoş Geldiniz",
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
                             ),
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Text(
-                            "E-posta Adresiniz",
-                            style: GoogleFonts.montserrat(
-                              textStyle: const TextStyle(
-                                color: Colors.white54,
-                                fontSize: 14,
-                              ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text(
+                          "Kullanıcı Adı",
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              color: Colors.white54,
+                              fontSize: 14,
                             ),
                           ),
                         ),
-                        EmailTextField(emailcontroller: _emailcontroller),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 20),
-                          child: Text(
-                            "Parola",
-                            style: GoogleFonts.montserrat(
-                              textStyle: const TextStyle(
-                                color: Colors.white54,
-                                fontSize: 14,
-                              ),
+                      ),
+                      TextFormField(
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.person),
+                        ),
+                        keyboardType: TextInputType.name,
+                        onChanged: (value) {
+                          _nickname = value;
+                        },
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text(
+                          "E-posta Adresiniz",
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              color: Colors.white54,
+                              fontSize: 14,
                             ),
                           ),
                         ),
-                        PasswordField(
-                          fieldKey: _passwordFieldKey,
-                          onFieldSubmitted: (String value) {
-                            {
-                              _password = value;
-                            }
-                          },
+                      ),
+                      TextFormField(
+                        style: const TextStyle(color: Colors.white),
+                        decoration: const InputDecoration(
+                          prefixIcon: Icon(Icons.mail),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 20, left: 20),
-                          child: Text(
-                            "Parola Yeniden",
-                            style: GoogleFonts.montserrat(
-                              textStyle: const TextStyle(
-                                color: Colors.white54,
-                                fontSize: 14,
-                              ),
+                        keyboardType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
+                        onChanged: (value) {
+                          _email = value;
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, left: 20),
+                        child: Text(
+                          "Parola",
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              color: Colors.white54,
+                              fontSize: 14,
                             ),
                           ),
                         ),
-                        PasswordField(
-                          fieldKey: _againpasswordFieldKey,
-                          labelText: 'Yukarıdaki parolayı tekrar giriniz',
-                          onFieldSubmitted: (String value) {
-                            {
-                              _againpassword = value;
-                            }
-                          },
+                      ),
+                      PasswordField(
+                        onChanged: (String value) {
+                          {
+                            _password = value;
+                            print("object");
+                          }
+                        },
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20, left: 20),
+                        child: Text(
+                          "Parola Yeniden",
+                          style: GoogleFonts.montserrat(
+                            textStyle: const TextStyle(
+                              color: Colors.white54,
+                              fontSize: 14,
+                            ),
+                          ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            InkWell(
-                              child: const registeryButton(),
-                              //ToDo:Backend
-                              onTap: () {
-                                final bool isValid = EmailValidator.validate(
-                                    _emailcontroller.text);
-                                if (isValid) {
-                                  if (_password == _againpassword) {
-                                    //Todo:Local kontroller sonrası backend tarafı
-                                  } else {
+                      ),
+                      PasswordField(
+                        labelText: 'Yukarıdaki parolayı tekrar giriniz',
+                        onChanged: (String value) {
+                          {
+                            _againpassword = value;
+                          }
+                          print("a");
+                        },
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          InkWell(
+                            child: const registeryButton(),
+                            //ToDo:Backend
+                            onTap: () {
+                              final bool isValid =
+                                  EmailValidator.validate(_email);
+                              if (isValid) {
+                                if (_password == _againpassword) {
+                                  //Todo:Local kontroller sonrası backend tarafı
+                                  kayitol();
+                                  {
                                     Fluttertoast.showToast(
                                         msg:
-                                            "Parolalar eşleşmiyor.Lütfen tekrar deneyiniz",
+                                            "Başarı ile kayıt oldunuz giriş sayfasına yönlendirliyorsunuz.",
                                         toastLength: Toast.LENGTH_SHORT,
                                         gravity: ToastGravity.CENTER,
                                         timeInSecForIosWeb: 2,
@@ -165,11 +236,22 @@ class RegisteryPage extends StatelessWidget {
                                             255, 61, 77, 3),
                                         textColor: Colors.blue,
                                         fontSize: 16.0);
+                                    Future.delayed(
+                                      const Duration(seconds: 3),
+                                      (() {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => LoginPage(),
+                                          ),
+                                        );
+                                      }),
+                                    );
                                   }
                                 } else {
                                   Fluttertoast.showToast(
                                       msg:
-                                          "Girdiğiniz mail geçersiz.Lütfen yeniden deneyiniz.",
+                                          "Parolalar eşleşmiyor.Lütfen tekrar deneyiniz",
                                       toastLength: Toast.LENGTH_SHORT,
                                       gravity: ToastGravity.CENTER,
                                       timeInSecForIosWeb: 2,
@@ -178,22 +260,33 @@ class RegisteryPage extends StatelessWidget {
                                       textColor: Colors.blue,
                                       fontSize: 16.0);
                                 }
-                              },
-                            ),
-                            GestureDetector(
-                              child: const loginButtons(),
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => LoginPage()),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "Girdiğiniz mail geçersiz.Lütfen yeniden deneyiniz.",
+                                    toastLength: Toast.LENGTH_SHORT,
+                                    gravity: ToastGravity.CENTER,
+                                    timeInSecForIosWeb: 2,
+                                    backgroundColor:
+                                        const Color.fromARGB(255, 61, 77, 3),
+                                    textColor: Colors.blue,
+                                    fontSize: 16.0);
+                              }
+                            },
+                          ),
+                          GestureDetector(
+                            child: const loginButtons(),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => LoginPage()),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               )
@@ -259,27 +352,6 @@ class registeryButton extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class EmailTextField extends StatelessWidget {
-  const EmailTextField({
-    Key? key,
-    required this.emailcontroller,
-  }) : super(key: key);
-
-  final TextEditingController emailcontroller;
-
-  @override
-  Widget build(BuildContext context) {
-    return TextFormField(
-      style: const TextStyle(color: Colors.white),
-      decoration: const InputDecoration(
-        prefixIcon: Icon(Icons.mail),
-      ),
-      keyboardType: TextInputType.emailAddress,
-      autofillHints: const [AutofillHints.email],
     );
   }
 }

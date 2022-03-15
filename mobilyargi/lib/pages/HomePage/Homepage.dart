@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,7 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentindex = 0;
   final screens = [
-    Center(
+    const Center(
       child: Text(
         "Home",
         style: TextStyle(
@@ -26,7 +28,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     ),
-    Center(
+    const Center(
       child: Text(
         "Inbox",
         style: TextStyle(
@@ -34,7 +36,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     ),
-    Center(
+    const Center(
       child: Text(
         "Star",
         style: TextStyle(
@@ -48,22 +50,23 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
-        color: Color.fromARGB(101, 91, 218, 235),
+        color: const Color.fromARGB(101, 91, 218, 235),
         height: 45,
-        backgroundColor: Color.fromARGB(255, 253, 0, 173),
+        backgroundColor: const Color.fromARGB(255, 253, 0, 173),
         items: [
-          Icon(Icons.home, size: 30, color: Colors.blue),
+          const Icon(Icons.home, size: 30, color: Colors.blue),
           Badge(
             badgeColor: Colors.black,
-            child: Icon(Icons.move_to_inbox, size: 30, color: Colors.blue),
-            badgeContent: Text(
+            child:
+                const Icon(Icons.move_to_inbox, size: 30, color: Colors.blue),
+            badgeContent: const Text(
               //todo:Backend
               '3',
               style: TextStyle(color: Colors.white),
             ),
           ),
-          Icon(Icons.star, size: 30, color: Colors.blue),
-          Icon(
+          const Icon(Icons.star, size: 30, color: Colors.blue),
+          const Icon(
             Icons.person,
             size: 30,
             color: Colors.blue,
@@ -93,7 +96,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color.fromARGB(255, 150, 0, 100),
         title: Center(
           child: Text(
-            "Mobil Yargı",
+            "Yargı Mobil",
             style: GoogleFonts.pacifico(
               textStyle: const TextStyle(
                 color: Color.fromARGB(255, 2, 165, 187),
