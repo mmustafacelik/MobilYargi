@@ -27,7 +27,6 @@ class RegisteryPage extends StatelessWidget {
 //todo: Firebase error fırlatmalarını yakala ve kontrol ettir
 //todo: hataları yakalama olayına burdan bakabilirsin https://stackoverflow.com/questions/56113778/how-to-handle-firebase-auth-exceptions-on-flutter
   getBody(BuildContext context) {
-    final TextEditingController _emailcontroller = TextEditingController();
     Future<void> kayitol() async {
       try {
         await FirebaseAuth.instance
