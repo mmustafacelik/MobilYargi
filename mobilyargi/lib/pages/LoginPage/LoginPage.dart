@@ -23,6 +23,7 @@ class LoginPage extends StatelessWidget {
   }
 
   getBody(BuildContext context) {
+    //todo: Eğer email verification tamamlanmamışsa girmesin
     Future<void> Girisyap() async {
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(

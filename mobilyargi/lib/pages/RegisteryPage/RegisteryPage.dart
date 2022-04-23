@@ -25,6 +25,8 @@ class RegisteryPage extends StatelessWidget {
   }
 
   getBody(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+
     Future<void> kayitol() async {
       try {
         await FirebaseAuth.instance
@@ -49,9 +51,11 @@ class RegisteryPage extends StatelessWidget {
         return;
       }
       {
+        if (user != null && !user.emailVerified) {
+          await user.sendEmailVerification();
+        }
         Fluttertoast.showToast(
-            msg:
-                "Başarı ile kayıt oldunuz giriş sayfasına yönlendirliyorsunuz.",
+            msg: "Başarı ile kayıt oldunuz emailinizi onaylayınız.",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 2,
