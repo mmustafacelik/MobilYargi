@@ -46,6 +46,29 @@ class RegisteryPage extends StatelessWidget {
           textColor: Colors.blue,
           fontSize: 16.0,
         );
+        return;
+      }
+      {
+        Fluttertoast.showToast(
+            msg:
+                "Başarı ile kayıt oldunuz giriş sayfasına yönlendirliyorsunuz.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 2,
+            backgroundColor: const Color.fromARGB(255, 61, 77, 3),
+            textColor: Colors.blue,
+            fontSize: 16.0);
+        Future.delayed(
+          const Duration(seconds: 3),
+          (() {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LoginPage(),
+              ),
+            );
+          }),
+        );
       }
     }
 
@@ -211,29 +234,6 @@ class RegisteryPage extends StatelessWidget {
                                 if (_password == _againpassword) {
                                   //Todo:Local kontroller sonrası backend tarafı
                                   kayitol();
-                                  {
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "Başarı ile kayıt oldunuz giriş sayfasına yönlendirliyorsunuz.",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER,
-                                        timeInSecForIosWeb: 2,
-                                        backgroundColor: const Color.fromARGB(
-                                            255, 61, 77, 3),
-                                        textColor: Colors.blue,
-                                        fontSize: 16.0);
-                                    Future.delayed(
-                                      const Duration(seconds: 3),
-                                      (() {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => LoginPage(),
-                                          ),
-                                        );
-                                      }),
-                                    );
-                                  }
                                 } else {
                                   Fluttertoast.showToast(
                                       msg:
