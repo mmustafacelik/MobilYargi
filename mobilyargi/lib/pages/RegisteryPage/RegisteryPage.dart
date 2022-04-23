@@ -218,7 +218,6 @@ class RegisteryPage extends StatelessWidget {
                           {
                             _againpassword = value;
                           }
-                          print("a");
                         },
                       ),
                       Row(
@@ -226,13 +225,11 @@ class RegisteryPage extends StatelessWidget {
                         children: [
                           InkWell(
                             child: const registeryButton(),
-                            //ToDo:Backend
                             onTap: () {
                               final bool isValid =
                                   EmailValidator.validate(_email);
                               if (isValid) {
                                 if (_password == _againpassword) {
-                                  //Todo:Local kontroller sonrası backend tarafı
                                   kayitol();
                                 } else {
                                   Fluttertoast.showToast(
