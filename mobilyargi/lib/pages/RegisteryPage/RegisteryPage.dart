@@ -24,8 +24,6 @@ class RegisteryPage extends StatelessWidget {
     );
   }
 
-//todo: Firebase error fırlatmalarını yakala ve kontrol ettir
-//todo: hataları yakalama olayına burdan bakabilirsin https://stackoverflow.com/questions/56113778/how-to-handle-firebase-auth-exceptions-on-flutter
   getBody(BuildContext context) {
     Future<void> kayitol() async {
       try {
@@ -37,28 +35,17 @@ class RegisteryPage extends StatelessWidget {
               .doc(_email)
               .set({"UserNickname": _nickname, "UsersEmail": _email});
         });
-      } catch (error) {
-        switch (error) {
-          case "email-already-in-use":
-            Fluttertoast.showToast(
-                msg: "Bu mail zaten kullanılıyor",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 2,
-                backgroundColor: const Color.fromARGB(255, 61, 77, 3),
-                textColor: Colors.blue,
-                fontSize: 16.0);
-            break;
-          default:
-            Fluttertoast.showToast(
-                msg: "Beklenmeyen bir hata oluştu sonra tekrar deneyiniz",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 2,
-                backgroundColor: const Color.fromARGB(255, 61, 77, 3),
-                textColor: Colors.blue,
-                fontSize: 16.0);
-        }
+      } on FirebaseAuthException catch (e) {
+        String errorMessage = e.message!;
+        Fluttertoast.showToast(
+          msg: "Bu sebeple kayıt olamadınız--->" + errorMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 2,
+          backgroundColor: const Color.fromARGB(255, 61, 77, 3),
+          textColor: Colors.blue,
+          fontSize: 16.0,
+        );
       }
     }
 
@@ -187,7 +174,6 @@ class RegisteryPage extends StatelessWidget {
                         onChanged: (String value) {
                           {
                             _password = value;
-                            print("object");
                           }
                         },
                       ),
