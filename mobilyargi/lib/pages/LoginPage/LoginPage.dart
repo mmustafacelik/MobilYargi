@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilyargi/pages/ForgotpasswordPage/ForgotPasswordPage.dart';
 import 'package:mobilyargi/pages/HomePage/Homepage.dart';
@@ -22,6 +23,31 @@ class LoginPage extends StatelessWidget {
   }
 
   getBody(BuildContext context) {
+    Future<void> Girisyap() async {
+      try {
+        await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: _emailcontroller.text,
+          password: _password,
+        );
+      } on FirebaseAuthException catch (e) {
+        String errorMessage = e.message!;
+        Fluttertoast.showToast(
+          msg: "Bu sebeple giriş yapamadınız--->" + errorMessage,
+          toastLength: Toast.LENGTH_LONG,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 2,
+          backgroundColor: const Color.fromARGB(255, 61, 77, 3),
+          textColor: Colors.blue,
+          fontSize: 16.0,
+        );
+        return;
+      }
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const HomePage()),
+      );
+    }
+
     return BlocProvider(
       create: (context) => LoginpageCubit(),
       child: SafeArea(
@@ -134,18 +160,12 @@ class LoginPage extends StatelessWidget {
                         children: [
                           GestureDetector(
                             child: const loginButtons(),
-                            //ToDo:Backend
                             onTap: () {
                               final bool isValid = EmailValidator.validate(
                                   _emailcontroller.text);
 
-                              if (/*isValid*/ true) {
-                                //Todo:Backend servisleri
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const HomePage()),
-                                );
+                              if (isValid) {
+                                Girisyap();
                               } else {
                                 Fluttertoast.showToast(
                                     msg:
@@ -162,7 +182,6 @@ class LoginPage extends StatelessWidget {
                           ),
                           GestureDetector(
                             child: const forgotPasswordButton(),
-                            //ToDo:Backend
                             onTap: () {
                               Navigator.push(
                                 context,
