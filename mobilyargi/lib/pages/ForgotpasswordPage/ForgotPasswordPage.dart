@@ -1,4 +1,5 @@
 import 'package:email_validator/email_validator.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -105,7 +106,7 @@ class ForgotPasswordPage extends StatelessWidget {
                       final bool isValid =
                           EmailValidator.validate(_emailcontroller.text);
                       if (isValid) {
-                        //Todo:Backend
+                        resetPassword();
                         Fluttertoast.showToast(
                             msg: "İsteğiniz Gönderilmiştir.",
                             toastLength: Toast.LENGTH_SHORT,
@@ -142,6 +143,11 @@ class ForgotPasswordPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Future resetPassword() async {
+    await FirebaseAuth.instance
+        .sendPasswordResetEmail(email: _emailcontroller.text);
   }
 }
 
