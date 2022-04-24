@@ -5,40 +5,56 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobilyargi/pages/HomePageScreen/cubit/homepagescreen_cubit.dart';
 
 class HomePageScreen extends StatefulWidget {
-  HomePageScreen({Key? key}) : super(key: key);
+  const HomePageScreen({Key? key}) : super(key: key);
   @override
   State<HomePageScreen> createState() => _HomePageScreenState();
 }
 
-// bool _admin = isAdmin();
-
 class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
-    isAdmin();
-    return Scaffold(
-      body: getBody(context),
+    return SingleChildScrollView(
+      child: getBody(context),
     );
   }
 
   getBody(BuildContext context) {
+    CollectionReference subjeclist =
+        FirebaseFirestore.instance.collection('Subjects');
     return BlocProvider(
       create: ((context) => HomepagescreenCubit()),
-      child: SingleChildScrollView(
-        child: Column(
-        children: const <Widget>[
-          
-        ],
-        ),
-      ),
+      child: StreamBuilder<QuerySnapshot>(
+          stream: subjeclist.snapshots(),
+          builder: (BuildContext context, snap) {
+            if (snap.data == null) return CircularProgressIndicator();
+            List<DocumentSnapshot> listofDocumets = snap.data!.docs;
+            return ListView.builder(
+              scrollDirection: Axis.vertical,
+              shrinkWrap: true,
+              itemBuilder: ((context, index) {
+                return Text(
+                  listofDocumets[index]['Title'],
+                  //style: TextStyle(fontSize: 24),
+                );
+              }),
+              itemCount: listofDocumets.length,
+            );
+
+            Container(
+              margin: const EdgeInsets.only(left: 20),
+              color: const Color.fromRGBO(37, 204, 223, 0.5),
+              child: Text("sda"),
+            );
+          }),
     );
   }
 }
 
-Future<bool> isAdmin() async {
-  CollectionReference usersRef = FirebaseFirestore.instance.collection('Users');
-  var isAdmin =
-      await usersRef.doc(FirebaseAuth.instance.currentUser!.email).get();
-  print(isAdmin['isAdmin'] + "salak");
-  return isAdmin['isAdmin'];
-}
+// bool _admin = false;
+// void isAdmin() async {
+//   CollectionReference usersRef = FirebaseFirestore.instance.collection('Users');
+//   var userinfo =
+//       await usersRef.doc(FirebaseAuth.instance.currentUser!.email).get();
+//   _admin = userinfo['IsAdmin'];
+// }
+

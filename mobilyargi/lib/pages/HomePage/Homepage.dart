@@ -22,7 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentindex = 0;
   final screens = [
-    HomePageScreen(),
+    const HomePageScreen(),
     const Center(
       child: Text(
         "Inbox",
@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     ),
-    ProfilePage(),
+    const ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {
