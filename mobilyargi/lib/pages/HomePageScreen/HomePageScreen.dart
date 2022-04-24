@@ -26,17 +26,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
       create: ((context) => HomepagescreenCubit()),
       child: SingleChildScrollView(
         child: Column(
-          children: <Widget>[
-            Visibility(
-              visible: true,
-              child: ElevatedButton(
-                onPressed: () {
-                  isAdmin();
-                },
-                child: const Icon(Icons.add),
-              ),
-            ),
-          ],
+        children: const <Widget>[
+          
+        ],
         ),
       ),
     );
