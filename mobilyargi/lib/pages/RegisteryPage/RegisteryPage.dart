@@ -32,10 +32,11 @@ class RegisteryPage extends StatelessWidget {
         await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password)
             .then((kullanici) {
-          FirebaseFirestore.instance
-              .collection("Users")
-              .doc(_email)
-              .set({"UserNickname": _nickname, "UsersEmail": _email});
+          FirebaseFirestore.instance.collection("Users").doc(_email).set({
+            "UserNickname": _nickname,
+            "UsersEmail": _email,
+            "IsAdmin": false
+          });
         });
       } on FirebaseAuthException catch (e) {
         String errorMessage = e.message!;
