@@ -152,7 +152,7 @@ class LoginPage extends StatelessWidget {
                       ),
                       PasswordField(
                         labelText: 'Buraya parolanızı giriniz.',
-                        onFieldSubmitted: (String value) {
+                        onChanged: (String value) {
                           {
                             _password = value;
                           }
