@@ -8,17 +8,17 @@ class Bookmark extends StatefulWidget {
 }
 
 class _BookmarkState extends State<Bookmark> {
-  bool _obscureText = false;
+  bool _isBookmarked = false;
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         setState(() {
-          _obscureText = !_obscureText;
+          _isBookmarked = !_isBookmarked;
         });
       },
-      child: Icon(_obscureText ? Icons.bookmark : Icons.bookmark_border),
+      child: Icon(_isBookmarked ? Icons.bookmark : Icons.bookmark_border),
     );
   }
 }

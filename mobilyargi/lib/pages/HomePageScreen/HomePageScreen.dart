@@ -20,21 +20,21 @@ class _HomePageScreenState extends State<HomePageScreen> {
   }
 
   getBody(BuildContext context) {
-    CollectionReference subjeclist =
+    CollectionReference subjectlist =
         FirebaseFirestore.instance.collection('Subjects');
     return BlocProvider(
       create: ((context) => HomepagescreenCubit()),
       child: StreamBuilder<QuerySnapshot>(
-          stream: subjeclist.snapshots(),
+          stream: subjectlist.snapshots(),
           builder: (BuildContext context, snap) {
             if (snap.data == null) return CircularProgressIndicator();
-            List<DocumentSnapshot> listofDocumets = snap.data!.docs;
+            List<DocumentSnapshot> listofDocuments = snap.data!.docs;
             return ListView.builder(
               scrollDirection: Axis.vertical,
               shrinkWrap: true,
               itemBuilder: ((context, index) {
                 DateTime dt =
-                    (listofDocumets[index]['Date'] as Timestamp).toDate();
+                    (listofDocuments[index]['Date'] as Timestamp).toDate();
                 String d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt);
                 return InkWell(
                   onTap: () {
@@ -50,27 +50,25 @@ class _HomePageScreenState extends State<HomePageScreen> {
                           children: [
                             Expanded(
                               child: Text(
-                                listofDocumets[index]['Title'],
-                                style: TextStyle(fontSize: 24),
+                                listofDocuments[index]['Title'],
+                                style: const TextStyle(fontSize: 24),
                               ),
                             ),
-                            const InkWell(
-                              //Todo: Kullanıcının bookmark ettiği konuları göstermek için tutarak firebaseye ekleme yapılacak
-                              // onTap: listofDocumets[index],
-                              child: Bookmark(),
-                            ),
+                            //todo: burada bookmark içindeki ontap butonu tetiklenip konunun beğeni sayısını
+                            //Todo: arttırıp hangi user bastıysa onun favoritetopic kısmına konuid eklenecek
+                            const Bookmark(),
                           ],
                         ),
                         Text(
-                          listofDocumets[index]['Index'],
-                          style: TextStyle(fontSize: 24),
+                          listofDocuments[index]['Index'],
+                          style: const TextStyle(fontSize: 24),
                         ),
                         Row(
                           children: [
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.3,
                               child: Text(
-                                "Yazar...:" + listofDocumets[index]['Writer'],
+                                "Yazar...:" + listofDocuments[index]['Writer'],
                                 style: const TextStyle(fontSize: 12),
                               ),
                             ),
@@ -83,7 +81,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                                 color: Colors.red,
                                 child: Text(
                                   "Beğeni...:" +
-                                      listofDocumets[index]['NumberofLike']
+                                      listofDocuments[index]['NumberofLike']
                                           .toString(),
                                   style: const TextStyle(fontSize: 12),
                                 ),
@@ -109,7 +107,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                   ),
                 );
               }),
-              itemCount: listofDocumets.length,
+              itemCount: listofDocuments.length,
             );
           }),
     );
