@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,7 +8,7 @@ import 'package:mobilyargi/pages/ForgotpasswordPage/ForgotPasswordPage.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatefulWidget {
-  ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({Key? key}) : super(key: key);
   @override
   State<ProfilePage> createState() => _ProfilePageState();
 }
@@ -20,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (image == null) return;
       final imageTemporary = File(image.path);
       setState(() => this.image = imageTemporary);
-    } on PlatformException catch (e) {
+    } on PlatformException catch (error) {
       Fluttertoast.showToast(
           msg: "Fotoğraf seçilemedi.",
           toastLength: Toast.LENGTH_SHORT,
@@ -48,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
               clipBehavior: Clip.none,
               fit: StackFit.expand,
               children: [
-                CircleAvatar(
+                const CircleAvatar(
                   //Todo:backend image picker ile upload edilip network image'de gösterilecek
                   backgroundImage: NetworkImage(
                       "https://cdn1.iconfinder.com/data/icons/avatars-1-5/136/60-512.png"),
@@ -62,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       pickImage();
                     },
                     elevation: 2.0,
-                    fillColor: Color(0xFFF5F6F9),
+                    fillColor: const Color(0xFFF5F6F9),
                     child: const Icon(
                       Icons.camera_alt_outlined,
                       color: Colors.blue,
@@ -84,19 +85,19 @@ class _ProfilePageState extends State<ProfilePage> {
             child: TextFormField(
               //controller: _emailcontroller,
               style: const TextStyle(color: Colors.black),
-              decoration: const InputDecoration(
-                fillColor: Color.fromARGB(255, 206, 237, 241),
+              decoration: InputDecoration(
+                fillColor: const Color.fromARGB(255, 206, 237, 241),
                 filled: true,
-                hintText: "mustafa@gmail.com ",
+                hintText: FirebaseAuth.instance.currentUser!.email,
                 enabled: false,
-                contentPadding: EdgeInsets.symmetric(
+                contentPadding: const EdgeInsets.symmetric(
                   vertical: 10.0,
                 ),
-                prefixIcon: Icon(
+                prefixIcon: const Icon(
                   Icons.mail,
                   color: Colors.blue,
                 ),
-                border: OutlineInputBorder(
+                border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 ),
               ),

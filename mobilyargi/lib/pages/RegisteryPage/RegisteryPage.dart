@@ -24,41 +24,56 @@ class RegisteryPage extends StatelessWidget {
     );
   }
 
-//todo: Firebase error fırlatmalarını yakala ve kontrol ettir
-//todo: hataları yakalama olayına burdan bakabilirsin https://stackoverflow.com/questions/56113778/how-to-handle-firebase-auth-exceptions-on-flutter
   getBody(BuildContext context) {
+    User? user = FirebaseAuth.instance.currentUser;
+
     Future<void> kayitol() async {
       try {
         await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password)
             .then((kullanici) {
-          FirebaseFirestore.instance
-              .collection("Users")
-              .doc(_email)
-              .set({"UserNickname": _nickname, "UsersEmail": _email});
+          FirebaseFirestore.instance.collection("Users").doc(_email).set({
+            "UserNickname": _nickname,
+            "UsersEmail": _email,
+            "IsAdmin": false
+          });
         });
-      } catch (error) {
-        switch (error) {
-          case "email-already-in-use":
-            Fluttertoast.showToast(
-                msg: "Bu mail zaten kullanılıyor",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 2,
-                backgroundColor: const Color.fromARGB(255, 61, 77, 3),
-                textColor: Colors.blue,
-                fontSize: 16.0);
-            break;
-          default:
-            Fluttertoast.showToast(
-                msg: "Beklenmeyen bir hata oluştu sonra tekrar deneyiniz",
-                toastLength: Toast.LENGTH_SHORT,
-                gravity: ToastGravity.CENTER,
-                timeInSecForIosWeb: 2,
-                backgroundColor: const Color.fromARGB(255, 61, 77, 3),
-                textColor: Colors.blue,
-                fontSize: 16.0);
+      } on FirebaseAuthException catch (e) {
+        String errorMessage = e.message!;
+        Fluttertoast.showToast(
+          msg: "Bu sebeple kayıt olamadınız--->" + errorMessage,
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 2,
+          backgroundColor: const Color.fromARGB(255, 61, 77, 3),
+          textColor: Colors.blue,
+          fontSize: 16.0,
+        );
+        return;
+      }
+      {
+        if (user != null && !user.emailVerified) {
+          await user.sendEmailVerification();
         }
+        Fluttertoast.showToast(
+            msg: "Başarı ile kayıt oldunuz emailinizi onaylayınız.",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 2,
+            backgroundColor: const Color.fromARGB(255, 61, 77, 3),
+            textColor: Colors.blue,
+            fontSize: 16.0);
+        Future.delayed(
+          const Duration(seconds: 3),
+          (() {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => LoginPage(),
+              ),
+            );
+          }),
+        );
       }
     }
 
@@ -187,7 +202,6 @@ class RegisteryPage extends StatelessWidget {
                         onChanged: (String value) {
                           {
                             _password = value;
-                            print("object");
                           }
                         },
                       ),
@@ -209,7 +223,6 @@ class RegisteryPage extends StatelessWidget {
                           {
                             _againpassword = value;
                           }
-                          print("a");
                         },
                       ),
                       Row(
@@ -217,37 +230,12 @@ class RegisteryPage extends StatelessWidget {
                         children: [
                           InkWell(
                             child: const registeryButton(),
-                            //ToDo:Backend
                             onTap: () {
                               final bool isValid =
                                   EmailValidator.validate(_email);
                               if (isValid) {
                                 if (_password == _againpassword) {
-                                  //Todo:Local kontroller sonrası backend tarafı
                                   kayitol();
-                                  {
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "Başarı ile kayıt oldunuz giriş sayfasına yönlendirliyorsunuz.",
-                                        toastLength: Toast.LENGTH_SHORT,
-                                        gravity: ToastGravity.CENTER,
-                                        timeInSecForIosWeb: 2,
-                                        backgroundColor: const Color.fromARGB(
-                                            255, 61, 77, 3),
-                                        textColor: Colors.blue,
-                                        fontSize: 16.0);
-                                    Future.delayed(
-                                      const Duration(seconds: 3),
-                                      (() {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => LoginPage(),
-                                          ),
-                                        );
-                                      }),
-                                    );
-                                  }
                                 } else {
                                   Fluttertoast.showToast(
                                       msg:

@@ -10,6 +10,8 @@ import 'package:mobilyargi/pages/LoginPage/LoginPage.dart';
 import 'package:badges/badges.dart';
 import 'package:mobilyargi/pages/ProfilePage/ProfilePage.dart';
 
+import '../HomePageScreen/HomePageScreen.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
@@ -20,14 +22,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int currentindex = 0;
   final screens = [
-    const Center(
-      child: Text(
-        "Home",
-        style: TextStyle(
-          fontSize: 60,
-        ),
-      ),
-    ),
+    const HomePageScreen(),
     const Center(
       child: Text(
         "Inbox",
@@ -44,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     ),
-    ProfilePage(),
+    const ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -74,20 +69,16 @@ class _HomePageState extends State<HomePage> {
         ],
         onTap: (index) {
           if (index == 0) {
-            print("0");
             currentindex = index;
             setState(() {});
           } else if (index == 1) {
             currentindex = index;
-            print("1");
             setState(() {});
           } else if (index == 2) {
             currentindex = index;
-            print("2");
             setState(() {});
           } else {
             currentindex = index;
-            print("3");
             setState(() {});
           }
         },
