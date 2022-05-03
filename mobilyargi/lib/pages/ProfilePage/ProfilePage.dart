@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -21,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (image == null) return;
       final imageTemporary = File(image.path);
       setState(() => this.image = imageTemporary);
-    } on PlatformException catch (error) {
+    } on PlatformException {
       Fluttertoast.showToast(
           msg: "Fotoğraf seçilemedi.",
           toastLength: Toast.LENGTH_SHORT,
@@ -36,6 +37,18 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     TextEditingController? _kullaniciadi;
+    Future<bool> isAdmin() async {
+      CollectionReference usersRef =
+          FirebaseFirestore.instance.collection('Users');
+      var userinfo =
+          await usersRef.doc(FirebaseAuth.instance.currentUser!.email).get();
+      if (userinfo['IsAdmin']) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
     return Column(
       children: [
         SizedBox(
@@ -231,7 +244,47 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-        )
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height / 20),
+        GestureDetector(
+          child: FutureBuilder<bool>(
+            future: isAdmin(),
+            builder: (context, fSnapshot) {
+              if (fSnapshot.hasData) {
+                return Visibility(
+                  visible: fSnapshot.data!,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20, left: 10),
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.amber,
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Konu Ekle",
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+            );
+          },
+        ),
       ],
     );
   }
