@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     ),
-    const ProfilePage(),
+    ProfilePage(),
   ];
   @override
   Widget build(BuildContext context) {
