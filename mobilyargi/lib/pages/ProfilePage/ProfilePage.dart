@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobilyargi/pages/AddSubjectPage/AddSubjectPage.dart';
 import 'package:mobilyargi/pages/ForgotpasswordPage/ForgotPasswordPage.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -36,17 +37,21 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    Future<String> nickName() async {
+      CollectionReference usersRef =
+          FirebaseFirestore.instance.collection('Users');
+      var userinfo =
+          await usersRef.doc(FirebaseAuth.instance.currentUser!.email).get();
+      return (userinfo['UserNickname']) ?? 'null';
+    }
+
     TextEditingController? _kullaniciadi;
     Future<bool> isAdmin() async {
       CollectionReference usersRef =
           FirebaseFirestore.instance.collection('Users');
       var userinfo =
           await usersRef.doc(FirebaseAuth.instance.currentUser!.email).get();
-      if (userinfo['IsAdmin']) {
-        return true;
-      } else {
-        return false;
-      }
+      return (userinfo['IsAdmin']) ?? false;
     }
 
     return Column(
@@ -129,14 +134,13 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: const InputDecoration(
                 fillColor: Color.fromARGB(255, 206, 237, 241),
                 filled: true,
-                hintText:
-                    "Kullanıcı Adı", //Todo:Kullanıcı adı çekilecek backend
+                hintText: "KullanıcıAdı", //Todo:Kullanıcı adı çekilecek backend
                 enabled: true,
                 contentPadding: EdgeInsets.symmetric(
                   vertical: 10.0,
                 ),
                 prefixIcon: Icon(
-                  Icons.mail,
+                  Icons.person,
                   color: Colors.blue,
                 ),
                 border: OutlineInputBorder(
@@ -279,9 +283,9 @@ class _ProfilePageState extends State<ProfilePage> {
             },
           ),
           onTap: () {
-            Navigator.push(
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => ForgotPasswordPage()),
+              MaterialPageRoute(builder: (context) => const AddSubjectPage()),
             );
           },
         ),

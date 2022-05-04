@@ -27,98 +27,103 @@ class _HomePageScreenState extends State<HomePageScreen> {
       child: StreamBuilder<QuerySnapshot>(
           stream: subjectlist.snapshots(),
           builder: (BuildContext context, snap) {
-            if (snap.data == null) return CircularProgressIndicator();
+            if (snap.data == null) return const CircularProgressIndicator();
             List<DocumentSnapshot> listofDocuments = snap.data!.docs;
-            return ListView.builder(
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemBuilder: ((context, index) {
-                DateTime dt =
-                    (listofDocuments[index]['Date'] as Timestamp).toDate();
-                String d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt);
-                return InkWell(
-                  onTap: () {
-                    //todo: buraya basıldığı anda o basılan konu sayfasına gidecek
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).size.height * 0.01),
-                    color: const Color.fromRGBO(37, 204, 223, 0.5),
-                    child: Column(
-                      children: [
-                        Row(
+            return Column(
+              children: [
+                ListView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemBuilder: ((context, index) {
+                    DateTime dt =
+                        (listofDocuments[index]['Date'] as Timestamp).toDate();
+                    String d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt);
+                    return InkWell(
+                      onTap: () {
+                        //todo: buraya basıldığı anda o basılan konu sayfasına gidecek
+                      },
+                      child: Container(
+                        margin: EdgeInsets.only(
+                            bottom: MediaQuery.of(context).size.height * 0.01),
+                        color: const Color.fromRGBO(37, 204, 223, 0.5),
+                        child: Column(
                           children: [
-                            Expanded(
-                              child: Text(
-                                listofDocuments[index]['Title'],
-                                style: const TextStyle(fontSize: 24),
-                              ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    listofDocuments[index]['Title'],
+                                    style: const TextStyle(fontSize: 24),
+                                  ),
+                                ),
+                                //todo: burada bookmark içindeki ontap butonu tetiklenip konunun beğeni sayısını
+                                //Todo: arttırıp hangi user bastıysa onun favoritetopic kısmına konuid eklenecek
+                                const Bookmark(),
+                              ],
                             ),
-                            //todo: burada bookmark içindeki ontap butonu tetiklenip konunun beğeni sayısını
-                            //Todo: arttırıp hangi user bastıysa onun favoritetopic kısmına konuid eklenecek
-                            const Bookmark(),
+                            Text(
+                              listofDocuments[index]['Index'],
+                              style: const TextStyle(fontSize: 24),
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.3,
+                                  child: Text(
+                                    "Yazar...:" +
+                                        listofDocuments[index]['Writer'],
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.23,
+                                  child: Card(
+                                    color: Colors.red,
+                                    child: Text(
+                                      "Beğeni...:" +
+                                          listofDocuments[index]['NumberofLike']
+                                              .toString(),
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.05,
+                                ),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.37,
+                                  child: Card(
+                                    color: Colors.green,
+                                    child: Text(
+                                      "Tarih...:" + d24,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
-                        Text(
-                          listofDocuments[index]['Index'],
-                          style: const TextStyle(fontSize: 24),
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.3,
-                              child: Text(
-                                "Yazar...:" + listofDocuments[index]['Writer'],
-                                style: const TextStyle(fontSize: 12),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.05,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.23,
-                              child: Card(
-                                color: Colors.red,
-                                child: Text(
-                                  "Beğeni...:" +
-                                      listofDocuments[index]['NumberofLike']
-                                          .toString(),
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.05,
-                            ),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.37,
-                              child: Card(
-                                color: Colors.green,
-                                child: Text(
-                                  "Tarih...:" + d24,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                );
-              }),
-              itemCount: listofDocuments.length,
+                      ),
+                    );
+                  }),
+                  itemCount: listofDocuments.length,
+                ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height / 6,
+                ),
+              ],
             );
           }),
     );
   }
 }
-
-// bool _admin = false;
-// void isAdmin() async {
-//   CollectionReference usersRef = FirebaseFirestore.instance.collection('Users');
-//   var userinfo =
-//       await usersRef.doc(FirebaseAuth.instance.currentUser!.email).get();
-//   _admin = userinfo['IsAdmin'];
-// }
-

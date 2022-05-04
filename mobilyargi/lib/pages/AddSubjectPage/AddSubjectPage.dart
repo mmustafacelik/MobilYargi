@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:mobilyargi/pages/HomePage/Homepage.dart';
 
 import 'cubit/addsubjectpage_cubit.dart';
 
@@ -19,6 +23,16 @@ class _AddSubjectPageState extends State<AddSubjectPage> {
   }
 
   getBody(BuildContext context) {
+    Future<String> nickName() async {
+      CollectionReference usersRef =
+          FirebaseFirestore.instance.collection('Users');
+      var userinfo =
+          await usersRef.doc(FirebaseAuth.instance.currentUser!.email).get();
+      return (userinfo['UserNickname']) ?? 'null';
+    }
+
+    CollectionReference subjectRef =
+        FirebaseFirestore.instance.collection('Subjects');
     TextEditingController titlecontroller = TextEditingController();
     TextEditingController indexcontroller = TextEditingController();
     return BlocProvider(
@@ -69,34 +83,98 @@ class _AddSubjectPageState extends State<AddSubjectPage> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height / 13,
                 ),
-                TextFormField(
-                  controller: indexcontroller,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    border: const OutlineInputBorder(),
-                    labelText: "İçerik",
-                    labelStyle: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
-                    ),
-                    filled: true,
-                    fillColor: Colors.white70,
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20),
-                      borderSide: const BorderSide(
-                        width: 5,
-                        color: Colors.red,
+                Flexible(
+                  child: TextFormField(
+                    controller: indexcontroller,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(),
+                      labelText: "İçerik",
+                      labelStyle: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
                       ),
-                    ),
-                    focusedBorder: const OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 5,
-                        color: Colors.orange,
+                      filled: true,
+                      fillColor: Colors.white70,
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                        borderSide: const BorderSide(
+                          width: 5,
+                          color: Colors.red,
+                        ),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                        borderSide: BorderSide(
+                          width: 5,
+                          color: Colors.orange,
+                        ),
                       ),
                     ),
                   ),
+                ),
+                InkWell(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20, left: 10),
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.amber,
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Konu Ekle",
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  onTap: () async {
+                    subjectRef.doc(titlecontroller.text).set({
+                      "Date": DateTime.now(),
+                      "Writer": await nickName(),
+                      "NumberofLike": 0,
+                      "Title": titlecontroller.text,
+                      "Index": indexcontroller.text,
+                    });
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => ForgotPasswordPage()),
+                    // );
+                  },
+                ),
+                InkWell(
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20, left: 10),
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.amber,
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Anasayfaya Git",
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => HomePage()),
+                    );
+                  },
                 ),
               ],
             ),
