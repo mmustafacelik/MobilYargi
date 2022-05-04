@@ -1,9 +1,11 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mobilyargi/pages/AddSubjectPage/AddSubjectPage.dart';
 import 'package:mobilyargi/pages/ForgotpasswordPage/ForgotPasswordPage.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -21,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (image == null) return;
       final imageTemporary = File(image.path);
       setState(() => this.image = imageTemporary);
-    } on PlatformException catch (error) {
+    } on PlatformException {
       Fluttertoast.showToast(
           msg: "Fotoğraf seçilemedi.",
           toastLength: Toast.LENGTH_SHORT,
@@ -35,7 +37,23 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
+    Future<String> nickName() async {
+      CollectionReference usersRef =
+          FirebaseFirestore.instance.collection('Users');
+      var userinfo =
+          await usersRef.doc(FirebaseAuth.instance.currentUser!.email).get();
+      return (userinfo['UserNickname']) ?? 'null';
+    }
+
     TextEditingController? _kullaniciadi;
+    Future<bool> isAdmin() async {
+      CollectionReference usersRef =
+          FirebaseFirestore.instance.collection('Users');
+      var userinfo =
+          await usersRef.doc(FirebaseAuth.instance.currentUser!.email).get();
+      return (userinfo['IsAdmin']) ?? false;
+    }
+
     return Column(
       children: [
         SizedBox(
@@ -116,14 +134,13 @@ class _ProfilePageState extends State<ProfilePage> {
               decoration: const InputDecoration(
                 fillColor: Color.fromARGB(255, 206, 237, 241),
                 filled: true,
-                hintText:
-                    "Kullanıcı Adı", //Todo:Kullanıcı adı çekilecek backend
+                hintText: "KullanıcıAdı", //Todo:Kullanıcı adı çekilecek backend
                 enabled: true,
                 contentPadding: EdgeInsets.symmetric(
                   vertical: 10.0,
                 ),
                 prefixIcon: Icon(
-                  Icons.mail,
+                  Icons.person,
                   color: Colors.blue,
                 ),
                 border: OutlineInputBorder(
@@ -231,7 +248,47 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ],
           ),
-        )
+        ),
+        SizedBox(height: MediaQuery.of(context).size.height / 20),
+        GestureDetector(
+          child: FutureBuilder<bool>(
+            future: isAdmin(),
+            builder: (context, fSnapshot) {
+              if (fSnapshot.hasData) {
+                return Visibility(
+                  visible: fSnapshot.data!,
+                  child: Container(
+                    margin: const EdgeInsets.only(top: 20, left: 10),
+                    width: MediaQuery.of(context).size.width / 2.5,
+                    height: 30,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: Colors.amber,
+                    ),
+                    child: Center(
+                      child: Text(
+                        "Konu Ekle",
+                        style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return const Center(child: CircularProgressIndicator());
+              }
+            },
+          ),
+          onTap: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const AddSubjectPage()),
+            );
+          },
+        ),
       ],
     );
   }

@@ -9,7 +9,8 @@ class PasswordField extends StatefulWidget {
   final FormFieldValidator<String>? validator;
   final ValueChanged<String>? onFieldSubmitted;
   final ValueChanged<String>? onChanged;
-  PasswordField({
+  const PasswordField({
+    Key? key,
     this.fieldKey,
     this.hintText = "",
     this.labelText = "Parolayı Buraya Giriniz",
@@ -18,7 +19,7 @@ class PasswordField extends StatefulWidget {
     this.validator,
     this.onFieldSubmitted,
     this.onChanged,
-  });
+  }) : super(key: key);
 
   @override
   _PasswordFieldState createState() => _PasswordFieldState();
