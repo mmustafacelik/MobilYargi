@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mobilyargi/pages/HomePage/cubit/homepage_cubit.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:mobilyargi/pages/InboxPage/inboxpage.dart';
 import 'package:mobilyargi/pages/LoginPage/LoginPage.dart';
 import 'package:badges/badges.dart';
 import 'package:mobilyargi/pages/ProfilePage/ProfilePage.dart';
@@ -23,14 +24,7 @@ class _HomePageState extends State<HomePage> {
   int currentindex = 0;
   final screens = [
     const HomePageScreen(),
-    const Center(
-      child: Text(
-        "Inbox",
-        style: TextStyle(
-          fontSize: 60,
-        ),
-      ),
-    ),
+    InboxPage(),
     const Center(
       child: Text(
         "Star",
