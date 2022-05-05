@@ -142,11 +142,6 @@ class _AddSubjectPageState extends State<AddSubjectPage> {
                       "Title": titlecontroller.text,
                       "Index": indexcontroller.text,
                     });
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(
-                    //       builder: (context) => ForgotPasswordPage()),
-                    // );
                   },
                 ),
                 InkWell(
@@ -172,7 +167,7 @@ class _AddSubjectPageState extends State<AddSubjectPage> {
                   onTap: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => HomePage()),
+                      MaterialPageRoute(builder: (context) => const HomePage()),
                     );
                   },
                 ),

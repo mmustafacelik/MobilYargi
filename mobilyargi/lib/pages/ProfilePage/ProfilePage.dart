@@ -45,6 +45,7 @@ class _ProfilePageState extends State<ProfilePage> {
       return (userinfo['UserNickname']) ?? 'null';
     }
 
+    List? kullaniciadlari;
     TextEditingController? _kullaniciadi;
     Future<bool> isAdmin() async {
       CollectionReference usersRef =
@@ -128,26 +129,31 @@ class _ProfilePageState extends State<ProfilePage> {
         Center(
           child: SizedBox(
             width: MediaQuery.of(context).size.width / 1.3,
-            child: TextFormField(
-              controller: _kullaniciadi,
-              style: const TextStyle(color: Colors.black),
-              decoration: const InputDecoration(
-                fillColor: Color.fromARGB(255, 206, 237, 241),
-                filled: true,
-                hintText: "KullanıcıAdı", //Todo:Kullanıcı adı çekilecek backend
-                enabled: true,
-                contentPadding: EdgeInsets.symmetric(
-                  vertical: 10.0,
-                ),
-                prefixIcon: Icon(
-                  Icons.person,
-                  color: Colors.blue,
-                ),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                ),
-              ),
-            ),
+            child: FutureBuilder<String>(
+                future: nickName(),
+                builder: (context, snapshot) {
+                  return TextFormField(
+                    controller: _kullaniciadi,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      fillColor: const Color.fromARGB(255, 206, 237, 241),
+                      filled: true,
+                      hintText: "Kullanıcı Adınız...:" + snapshot.data!,
+                      //Todo:Kullanıcı adı çekilecek backend
+                      enabled: true,
+                      contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10.0,
+                      ),
+                      prefixIcon: const Icon(
+                        Icons.person,
+                        color: Colors.blue,
+                      ),
+                      border: const OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                      ),
+                    ),
+                  );
+                }),
           ),
         ),
         SizedBox(
@@ -178,7 +184,13 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 onTap: () {
-                  /*if(kullanici adi alınmışsa||_kullaniciadi.text==null)
+                  // FirebaseFirestore.instance
+                  //     .collection("Users")
+                  //     .where((uid), isEqualTo: true)
+                  //     .get()
+                  //     .then((value) => print(value.docs[0].data()));
+
+                  /*if(kullanici adi alınmışsa && _kullaniciadi.text==null)
                   {
                     Fluttertoast.showToast(
                                     msg:
