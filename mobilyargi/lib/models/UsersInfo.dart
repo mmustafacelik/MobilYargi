@@ -12,4 +12,7 @@ class UsersInfo {
     required this.nickname,
     required this.isAdmin,
   });
+  factory UsersInfo.fromJson(Map<String, dynamic> json) =>
+      _$UsersInfoFromJson(json);
+  Map<String, dynamic> toJson() => _$UsersInfoToJson(this);
 }

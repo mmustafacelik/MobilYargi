@@ -1,3 +1,4 @@
+// ignore: file_names
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,7 +46,13 @@ class _ProfilePageState extends State<ProfilePage> {
       return (userinfo['UserNickname']) ?? 'null';
     }
 
-    List? kullaniciadlari;
+    String kullaniciadigetir(AsyncSnapshot<String> snapshot) {
+      if (snapshot.hasData) {
+        return "Kullanıcı Adınız...:" + snapshot.data!;
+      } else
+        return 'null';
+    }
+
     TextEditingController? _kullaniciadi;
     Future<bool> isAdmin() async {
       CollectionReference usersRef =
@@ -138,8 +145,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     decoration: InputDecoration(
                       fillColor: const Color.fromARGB(255, 206, 237, 241),
                       filled: true,
-                      hintText: "Kullanıcı Adınız...:" + snapshot.data!,
-                      //Todo:Kullanıcı adı çekilecek backend
+                      hintText: kullaniciadigetir(snapshot),
                       enabled: true,
                       contentPadding: const EdgeInsets.symmetric(
                         vertical: 10.0,

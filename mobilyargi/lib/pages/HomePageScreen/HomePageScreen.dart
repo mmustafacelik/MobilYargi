@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobilyargi/componenets/Text_field/Bookmark.dart';
 import 'package:mobilyargi/pages/HomePageScreen/cubit/homepagescreen_cubit.dart';
+import 'package:mobilyargi/pages/SubjectPage/SubjectScreen.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({Key? key}) : super(key: key);
@@ -41,7 +42,13 @@ class _HomePageScreenState extends State<HomePageScreen> {
                     String d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt);
                     return InkWell(
                       onTap: () {
-                        //todo: buraya basıldığı anda o basılan konu sayfasına gidecek
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                SubjectScreen(listofDocuments[index]['Title']),
+                          ),
+                        );
                       },
                       child: Container(
                         margin: EdgeInsets.only(
