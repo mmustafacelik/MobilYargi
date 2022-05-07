@@ -51,7 +51,7 @@ class _ProfilePageState extends State<ProfilePage> {
           FirebaseFirestore.instance.collection('Users');
       var userinfo =
           await usersRef.doc(FirebaseAuth.instance.currentUser!.email).get();
-      return (userinfo['IsAdmin']) ?? false;
+      return userinfo['IsAdmin'] ?? false;
     }
 
     return Column(

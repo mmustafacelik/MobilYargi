@@ -1,19 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilyargi/pages/ConversationPage/ConversationPage.dart';
 
 class InboxPage extends StatefulWidget {
   InboxPage({Key? key}) : super(key: key);
-
   @override
   State<InboxPage> createState() => _InboxPageState();
 }
 
 class _InboxPageState extends State<InboxPage> {
+  final String userID = FirebaseAuth.instance.currentUser!.uid;
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("chats").snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection("conversations")
+            .where('members', arrayContains: userID)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text("Error: ${snapshot.error}");
@@ -25,8 +29,8 @@ class _InboxPageState extends State<InboxPage> {
             children: snapshot.data!.docs
                 .map((doc) => ListTile(
                       leading: const CircleAvatar(),
-                      title: Text(doc["name"]),
-                      subtitle: Text(doc["message"]),
+                      title: const Text("Kisi"),
+                      subtitle: Text(doc["displayName"]),
                       trailing: Column(
                         children: [
                           const Text("20:04"),
@@ -51,7 +55,10 @@ class _InboxPageState extends State<InboxPage> {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ConversationPage()));
+                                builder: (context) => ConversationPage(
+                                      userID: userID,
+                                      conversationID: doc.id,
+                                    )));
                       },
                     ))
                 .toList(),
