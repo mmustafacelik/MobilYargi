@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:mobilyargi/pages/HomePage/Homepage.dart';
 import 'package:intl/intl.dart';
 
@@ -9,11 +11,13 @@ class SubjectScreen extends StatefulWidget {
     this._subjectTitle, {
     Key? key,
   }) : super(key: key);
+
   @override
   State<SubjectScreen> createState() => _SubjectScreenState();
 }
 
 class _SubjectScreenState extends State<SubjectScreen> {
+  final TextEditingController _commentcontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +28,9 @@ class _SubjectScreenState extends State<SubjectScreen> {
   getBody(BuildContext context, String subjectTitle) {
     CollectionReference subjectCollection =
         FirebaseFirestore.instance.collection('Subjects');
-    final TextEditingController _commentcontroller = TextEditingController();
+    Query<Map<String, dynamic>> subcollections = FirebaseFirestore.instance
+        .collectionGroup('Comments')
+        .where('subject', isEqualTo: subjectTitle);
     var subjectInfo = subjectCollection.doc(subjectTitle);
     return SafeArea(
       child: SingleChildScrollView(
@@ -43,94 +49,136 @@ class _SubjectScreenState extends State<SubjectScreen> {
               StreamBuilder<DocumentSnapshot>(
                   stream: subjectInfo.snapshots(),
                   builder: (context, AsyncSnapshot asyncSnapshot) {
-                    // var response = await subjectInfo.get();
-                    //           var veri = response.data();
                     if (asyncSnapshot.hasData) {
+                      Future<String> nickName() async {
+                        CollectionReference usersRef =
+                            FirebaseFirestore.instance.collection('Users');
+                        var userinfo = await usersRef
+                            .doc(FirebaseAuth.instance.currentUser!.email)
+                            .get();
+                        return (userinfo['UserNickname']) ?? 'null';
+                      }
+
                       DateTime dt =
                           (asyncSnapshot.data['Date'] as Timestamp).toDate();
                       String d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt);
-                      return Column(
-                        children: [
-                          Container(
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 228, 161, 156),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
+                      return Expanded(
+                        child: Column(
+                          children: [
+                            Container(
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 228, 161, 156),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
+                              ),
+                              child: Text('${asyncSnapshot.data['Title']}'),
                             ),
-                            child: Text('${asyncSnapshot.data['Title']}'),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height / 20,
-                          ),
-                          Container(
-                            decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 228, 161, 156),
-                              borderRadius:
-                                  BorderRadius.all(Radius.circular(5)),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height / 20,
                             ),
-                            child: Text('${asyncSnapshot.data['Index']}'),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height / 20,
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 228, 161, 156),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                ),
-                                child: Text(
-                                    'Yazar....:${asyncSnapshot.data['Writer']}'),
+                            Container(
+                              decoration: const BoxDecoration(
+                                color: Color.fromARGB(255, 228, 161, 156),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(5)),
                               ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width / 15,
-                              ),
-                              Container(
-                                decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 228, 161, 156),
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(5)),
-                                ),
-                                child: Text(
-                                    'Beğeni Sayısı...:${asyncSnapshot.data['NumberofLike']}'),
-                              ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width / 15,
-                              ),
-                              Expanded(
-                                child: Container(
+                              child: Text('${asyncSnapshot.data['Index']}'),
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height / 20,
+                            ),
+                            Row(
+                              children: [
+                                Container(
                                   decoration: const BoxDecoration(
                                     color: Color.fromARGB(255, 228, 161, 156),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5)),
                                   ),
-                                  child: Text("Tarih..:" + d24.toString()),
+                                  child: Text(
+                                      'Yazar....:${asyncSnapshot.data['Writer']}'),
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 15,
+                                ),
+                                Container(
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 228, 161, 156),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(5)),
+                                  ),
+                                  child: Text(
+                                      'Beğeni Sayısı...:${asyncSnapshot.data['NumberofLike']}'),
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 15,
+                                ),
+                                Expanded(
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Color.fromARGB(255, 228, 161, 156),
+                                      borderRadius:
+                                          BorderRadius.all(Radius.circular(5)),
+                                    ),
+                                    child: Text("Tarih..:" + d24.toString()),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height / 20,
+                            ),
+                            SingleChildScrollView(
+                              child: Container(
+                                height: MediaQuery.of(context).size.height / 2,
+                                color: Colors.white,
+                                width: MediaQuery.of(context).size.width,
+                                child: Card(
+                                  color: Colors.red,
+                                  child: Text("sad"),
                                 ),
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height / 20,
-                          ),
-                          TextFormField(
-                            minLines: 6,
-                            keyboardType: TextInputType.multiline,
-                            maxLines: null,
-                            controller: _commentcontroller,
-                            decoration: const InputDecoration(
-                                labelText: 'Yorum Yap',
-                                border: OutlineInputBorder(),
-                                hintText: 'Bu kararı beğendim 👍'),
-                          ),
-                          ElevatedButton(
-                            onPressed: (() {
-                              //TODO: Yorum ekleme işlemi
-                            }),
-                            child: const Text("Gönder"),
-                          ),
-                        ],
+                            ),
+                            SizedBox(
+                              height: MediaQuery.of(context).size.height / 40,
+                            ),
+                            TextFormField(
+                              minLines: 1,
+                              keyboardType: TextInputType.multiline,
+                              maxLines: null,
+                              controller: _commentcontroller,
+                              decoration: const InputDecoration(
+                                  labelText: 'Yorum Yap',
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Bu kararı beğendim 👍'),
+                            ),
+                            ElevatedButton(
+                              onPressed: (() async {
+                                if (_commentcontroller.text.isNotEmpty) {
+                                  String nickname = await nickName();
+                                  await FirebaseFirestore.instance
+                                      .collection('Subjects')
+                                      .doc(widget._subjectTitle)
+                                      .collection("Comments")
+                                      .add({
+                                    nickname: _commentcontroller.text,
+                                  });
+                                  _commentcontroller.clear();
+                                } else {
+                                  Fluttertoast.showToast(
+                                      msg: "Yorumunuz boş olamaz",
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.CENTER,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.red,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0);
+                                }
+                              }),
+                              child: const Text("Gönder"),
+                            ),
+                          ],
+                        ),
                       );
                     } else {
                       return const Text("Hata oluştu.Sonra tekrar deneyiniz.");
