@@ -128,17 +128,55 @@ class _SubjectScreenState extends State<SubjectScreen> {
                             SizedBox(
                               height: MediaQuery.of(context).size.height / 20,
                             ),
-                            SingleChildScrollView(
-                              child: Container(
-                                height: MediaQuery.of(context).size.height / 2,
-                                color: Colors.white,
-                                width: MediaQuery.of(context).size.width,
-                                child: Card(
-                                  color: Colors.red,
-                                  child: Text("sad"),
-                                ),
-                              ),
-                            ),
+                            StreamBuilder(
+                                stream: FirebaseFirestore.instance
+                                    .collection('Subjects')
+                                    .doc(widget._subjectTitle)
+                                    .collection("Comments")
+                                    .orderBy('Date', descending: false)
+                                    .snapshots(),
+                                builder: (context,
+                                    AsyncSnapshot<
+                                            QuerySnapshot<Map<String, dynamic>>>
+                                        snapshot) {
+                                  if (!snapshot.hasData) {
+                                    return const Expanded(
+                                        child: CircularProgressIndicator());
+                                  } else {
+                                    QuerySnapshot<Map<String, dynamic>> data =
+                                        snapshot.data!;
+                                    return SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height /
+                                              2,
+                                      child: SingleChildScrollView(
+                                        physics: const ScrollPhysics(),
+                                        child: Column(children: [
+                                          ListView.builder(
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            shrinkWrap: true,
+                                            itemBuilder: ((context, index) {
+                                              // for(String key in data.docs[index].data().keys)
+
+                                              return Card(
+                                                color: Colors.orange.shade100,
+                                                child: Text(
+                                                  data.docs[index]
+                                                      .data()
+                                                      .toString(),
+                                                  style:
+                                                      TextStyle(fontSize: 14),
+                                                ),
+                                              );
+                                            }),
+                                            itemCount: data.docs.length,
+                                          ),
+                                        ]),
+                                      ),
+                                    );
+                                  }
+                                }),
                             SizedBox(
                               height: MediaQuery.of(context).size.height / 40,
                             ),
@@ -152,30 +190,54 @@ class _SubjectScreenState extends State<SubjectScreen> {
                                   border: OutlineInputBorder(),
                                   hintText: 'Bu kararı beğendim 👍'),
                             ),
-                            ElevatedButton(
-                              onPressed: (() async {
-                                if (_commentcontroller.text.isNotEmpty) {
-                                  String nickname = await nickName();
-                                  await FirebaseFirestore.instance
-                                      .collection('Subjects')
-                                      .doc(widget._subjectTitle)
-                                      .collection("Comments")
-                                      .add({
-                                    nickname: _commentcontroller.text,
-                                  });
-                                  _commentcontroller.clear();
-                                } else {
-                                  Fluttertoast.showToast(
-                                      msg: "Yorumunuz boş olamaz",
-                                      toastLength: Toast.LENGTH_SHORT,
-                                      gravity: ToastGravity.CENTER,
-                                      timeInSecForIosWeb: 1,
-                                      backgroundColor: Colors.red,
-                                      textColor: Colors.white,
-                                      fontSize: 16.0);
-                                }
-                              }),
-                              child: const Text("Gönder"),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ElevatedButton(
+                                  onPressed: (() async {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const HomePage()),
+                                    );
+                                  }),
+                                  child: const Text("Anasayfa"),
+                                ),
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width / 2,
+                                ),
+                                ElevatedButton(
+                                  onPressed: (() async {
+                                    if (_commentcontroller.text.isNotEmpty) {
+                                      String nickname = await nickName();
+                                      await FirebaseFirestore.instance
+                                          .collection('Subjects')
+                                          .doc(widget._subjectTitle)
+                                          .collection("Comments")
+                                          .add({
+                                        nickname: _commentcontroller.text,
+                                        "Date": DateTime.now().hour.toString() +
+                                            ":" +
+                                            DateTime.now().minute.toString() +
+                                            ":" +
+                                            DateTime.now().second.toString(),
+                                      });
+                                      _commentcontroller.clear();
+                                    } else {
+                                      Fluttertoast.showToast(
+                                          msg: "Yorumunuz boş olamaz",
+                                          toastLength: Toast.LENGTH_SHORT,
+                                          gravity: ToastGravity.CENTER,
+                                          timeInSecForIosWeb: 1,
+                                          backgroundColor: Colors.red,
+                                          textColor: Colors.white,
+                                          fontSize: 16.0);
+                                    }
+                                  }),
+                                  child: const Text("Gönder"),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -184,15 +246,6 @@ class _SubjectScreenState extends State<SubjectScreen> {
                       return const Text("Hata oluştu.Sonra tekrar deneyiniz.");
                     }
                   }),
-              ElevatedButton(
-                onPressed: (() async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
-                  );
-                }),
-                child: const Text("Anasayfa"),
-              ),
             ],
           ),
         ),
