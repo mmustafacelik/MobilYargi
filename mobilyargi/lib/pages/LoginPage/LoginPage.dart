@@ -24,7 +24,7 @@ class LoginPage extends StatelessWidget {
 
   getBody(BuildContext context) {
     //todo: Eğer email verification tamamlanmamışsa girmesin
-    Future<void> Girisyap() async {
+    Future<void> girisyap() async {
       try {
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: _emailcontroller.text,
@@ -168,7 +168,7 @@ class LoginPage extends StatelessWidget {
                                   _emailcontroller.text);
 
                               if (isValid) {
-                                Girisyap();
+                                girisyap();
                               } else {
                                 Fluttertoast.showToast(
                                     msg:
