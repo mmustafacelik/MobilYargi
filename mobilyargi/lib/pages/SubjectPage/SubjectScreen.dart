@@ -61,7 +61,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
 
                       DateTime dt =
                           (asyncSnapshot.data['Date'] as Timestamp).toDate();
-                      String d24 = DateFormat('dd/MM/yyyy, HH:mm').format(dt);
+                      String d24 = DateFormat('MM/dd/yyyy, HH:mm').format(dt);
                       return Expanded(
                         child: Column(
                           children: [
@@ -74,7 +74,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
                               child: Text('${asyncSnapshot.data['Title']}'),
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height / 20,
+                              height: MediaQuery.of(context).size.height / 70,
                             ),
                             Container(
                               decoration: const BoxDecoration(
@@ -85,7 +85,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
                               child: Text('${asyncSnapshot.data['Index']}'),
                             ),
                             SizedBox(
-                              height: MediaQuery.of(context).size.height / 20,
+                              height: MediaQuery.of(context).size.height / 70,
                             ),
                             Row(
                               children: [
@@ -148,7 +148,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
                                     return SizedBox(
                                       height:
                                           MediaQuery.of(context).size.height /
-                                              2,
+                                              3.5,
                                       child: SingleChildScrollView(
                                         physics: const ScrollPhysics(),
                                         child: Column(children: [
@@ -157,8 +157,6 @@ class _SubjectScreenState extends State<SubjectScreen> {
                                                 const NeverScrollableScrollPhysics(),
                                             shrinkWrap: true,
                                             itemBuilder: ((context, index) {
-                                              // for(String key in data.docs[index].data().keys)
-
                                               return Card(
                                                 color: Colors.orange.shade100,
                                                 child: Text(
@@ -180,64 +178,79 @@ class _SubjectScreenState extends State<SubjectScreen> {
                             SizedBox(
                               height: MediaQuery.of(context).size.height / 40,
                             ),
-                            TextFormField(
-                              minLines: 1,
-                              keyboardType: TextInputType.multiline,
-                              maxLines: null,
-                              controller: _commentcontroller,
-                              decoration: const InputDecoration(
-                                  labelText: 'Yorum Yap',
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Bu kararı beğendim 👍'),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  onPressed: (() async {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const HomePage()),
-                                    );
-                                  }),
-                                  child: const Text("Anasayfa"),
-                                ),
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width / 2,
-                                ),
-                                ElevatedButton(
-                                  onPressed: (() async {
-                                    if (_commentcontroller.text.isNotEmpty) {
-                                      String nickname = await nickName();
-                                      await FirebaseFirestore.instance
-                                          .collection('Subjects')
-                                          .doc(widget._subjectTitle)
-                                          .collection("Comments")
-                                          .add({
-                                        nickname: _commentcontroller.text,
-                                        "Date": DateTime.now().hour.toString() +
-                                            ":" +
-                                            DateTime.now().minute.toString() +
-                                            ":" +
-                                            DateTime.now().second.toString(),
-                                      });
-                                      _commentcontroller.clear();
-                                    } else {
-                                      Fluttertoast.showToast(
-                                          msg: "Yorumunuz boş olamaz",
-                                          toastLength: Toast.LENGTH_SHORT,
-                                          gravity: ToastGravity.CENTER,
-                                          timeInSecForIosWeb: 1,
-                                          backgroundColor: Colors.red,
-                                          textColor: Colors.white,
-                                          fontSize: 16.0);
-                                    }
-                                  }),
-                                  child: const Text("Gönder"),
-                                ),
-                              ],
+                            Expanded(
+                              child: Column(
+                                children: [
+                                  TextFormField(
+                                    minLines: 1,
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null,
+                                    controller: _commentcontroller,
+                                    decoration: const InputDecoration(
+                                        labelText: 'Yorum Yap',
+                                        border: OutlineInputBorder(),
+                                        hintText: 'Bu kararı beğendim 👍'),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: (() async {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const HomePage()),
+                                          );
+                                        }),
+                                        child: const Text("Anasayfa"),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                2,
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: (() async {
+                                          if (_commentcontroller
+                                              .text.isNotEmpty) {
+                                            String nickname = await nickName();
+                                            await FirebaseFirestore.instance
+                                                .collection('Subjects')
+                                                .doc(widget._subjectTitle)
+                                                .collection("Comments")
+                                                .add({
+                                              nickname: _commentcontroller.text,
+                                              "Date": DateTime.now()
+                                                      .hour
+                                                      .toString() +
+                                                  ":" +
+                                                  DateTime.now()
+                                                      .minute
+                                                      .toString() +
+                                                  ":" +
+                                                  DateTime.now()
+                                                      .second
+                                                      .toString(),
+                                            });
+                                            _commentcontroller.clear();
+                                          } else {
+                                            Fluttertoast.showToast(
+                                                msg: "Yorumunuz boş olamaz",
+                                                toastLength: Toast.LENGTH_SHORT,
+                                                gravity: ToastGravity.CENTER,
+                                                timeInSecForIosWeb: 1,
+                                                backgroundColor: Colors.red,
+                                                textColor: Colors.white,
+                                                fontSize: 16.0);
+                                          }
+                                        }),
+                                        child: const Text("Gönder"),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
