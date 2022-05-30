@@ -71,7 +71,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                             ),
                             Text(
                               listofDocuments[index]['Index'],
-                              style: const TextStyle(fontSize: 24),
+                              style: const TextStyle(fontSize: 18),
                             ),
                             Row(
                               children: [
