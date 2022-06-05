@@ -33,7 +33,7 @@ class _ConversationPageState extends State<ConversationPage> {
               SizedBox(
                 width: 5,
               ),
-              Text("Ziroo"),
+              Text("Kişi"),
             ],
           ),
         ),

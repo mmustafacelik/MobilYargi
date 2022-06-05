@@ -11,6 +11,7 @@ class InboxPage extends StatefulWidget {
 
 class _InboxPageState extends State<InboxPage> {
   final String userID = FirebaseAuth.instance.currentUser!.uid;
+
   @override
   Widget build(BuildContext context) {
     return StreamBuilder(
@@ -25,43 +26,52 @@ class _InboxPageState extends State<InboxPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text("Loading..");
           }
-          return ListView(
-            children: snapshot.data!.docs
-                .map((doc) => ListTile(
-                      leading: const CircleAvatar(),
-                      title: const Text("Kisi"),
-                      subtitle: Text(doc["displayName"]),
-                      trailing: Column(
-                        children: [
-                          const Text("20:04"),
-                          Container(
-                            width: 20,
-                            height: 20,
-                            margin: const EdgeInsets.only(top: 8),
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Theme.of(context).colorScheme.secondary),
-                            child: const Center(
-                              child: Text("6",
-                                  textScaleFactor: 0.9,
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black)),
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                ListView(
+                  shrinkWrap: true,
+                  children: snapshot.data!.docs
+                      .map((doc) => ListTile(
+                            leading: const CircleAvatar(),
+                            title: const Text("Kişi"),
+                            subtitle: Text(doc["displayName"]),
+                            trailing: Column(
+                              children: [
+                                const Text("20:04"),
+                                Container(
+                                  width: 20,
+                                  height: 20,
+                                  margin: const EdgeInsets.only(top: 8),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .secondary),
+                                  child: const Center(
+                                    child: Text("1",
+                                        textScaleFactor: 0.9,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black)),
+                                  ),
+                                )
+                              ],
                             ),
-                          )
-                        ],
-                      ),
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ConversationPage(
-                                      userID: userID,
-                                      conversationID: doc.id,
-                                    )));
-                      },
-                    ))
-                .toList(),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ConversationPage(
+                                            userID: userID,
+                                            conversationID: doc.id,
+                                          )));
+                            },
+                          ))
+                      .toList(),
+                ),
+              ],
+            ),
           );
         });
   }

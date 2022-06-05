@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilyargi/pages/ForgotpasswordPage/ForgotPasswordPage.dart';
@@ -30,6 +31,12 @@ class LoginPage extends StatelessWidget {
           email: _emailcontroller.text,
           password: _password,
         );
+        FirebaseFirestore.instance
+            .collection("Users")
+            .doc(_emailcontroller.text)
+            .update({
+          "uuid": FirebaseAuth.instance.currentUser!.uid,
+        });
       } on FirebaseAuthException catch (e) {
         String errorMessage = e.message!;
         Fluttertoast.showToast(
