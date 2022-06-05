@@ -33,10 +33,11 @@ class RegisteryPage extends StatelessWidget {
         await FirebaseAuth.instance
             .createUserWithEmailAndPassword(email: _email, password: _password)
             .then((kullanici) {
-          FirebaseFirestore.instance
-              .collection("Users")
-              .doc(_email)
-              .set({"UserNickname": _nickname, "UsersEmail": _email});
+          FirebaseFirestore.instance.collection("Users").doc(_email).set({
+            "UserNickname": _nickname,
+            "UsersEmail": _email,
+            "IsAdmin": false,
+          });
         });
       } catch (error) {
         switch (error) {
@@ -154,7 +155,7 @@ class RegisteryPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: Text(
-                            "E-posta Adresiniz",
+                            "E-posta Adresi",
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
                                 color: Colors.white54,
@@ -180,7 +181,7 @@ class RegisteryPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: Text(
-                            "E-posta Adresiniz",
+                            "Parola",
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
                                 color: Colors.white54,
@@ -202,7 +203,7 @@ class RegisteryPage extends StatelessWidget {
                         Padding(
                           padding: const EdgeInsets.only(left: 20),
                           child: Text(
-                            "E-posta Adresiniz",
+                            "Parola",
                             style: GoogleFonts.montserrat(
                               textStyle: const TextStyle(
                                 color: Colors.white54,

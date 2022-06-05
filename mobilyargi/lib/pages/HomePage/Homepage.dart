@@ -42,20 +42,11 @@ class _HomePageState extends State<HomePage> {
         color: const Color.fromARGB(101, 91, 218, 235),
         height: 45,
         backgroundColor: const Color.fromARGB(255, 253, 0, 173),
-        items: [
-          const Icon(Icons.home, size: 30, color: Colors.blue),
-          Badge(
-            badgeColor: Colors.black,
-            child:
-                const Icon(Icons.move_to_inbox, size: 30, color: Colors.blue),
-            badgeContent: const Text(
-              //todo:Backend
-              '3',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          const Icon(Icons.star, size: 30, color: Colors.blue),
-          const Icon(
+        items: const [
+          Icon(Icons.home, size: 30, color: Colors.blue),
+          Icon(Icons.move_to_inbox, size: 30, color: Colors.blue),
+          Icon(Icons.star, size: 30, color: Colors.blue),
+          Icon(
             Icons.person,
             size: 30,
             color: Colors.blue,
