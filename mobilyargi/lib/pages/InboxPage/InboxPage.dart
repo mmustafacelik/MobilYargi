@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:mobilyargi/pages/ConversationPage/ConversationPage.dart';
+import 'package:mobilyargi/pages/New_conversation.dart';
 
 class InboxPage extends StatefulWidget {
   InboxPage({Key? key}) : super(key: key);
@@ -29,6 +30,18 @@ class _InboxPageState extends State<InboxPage> {
           return SingleChildScrollView(
             child: Column(
               children: [
+                Container(
+                    color: Colors.white30,
+                    child: TextButton(
+                        onPressed: (() {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => NewConversation(),
+                            ),
+                          );
+                        }),
+                        child: const Text("Sohbet Başlat"))),
                 ListView(
                   shrinkWrap: true,
                   children: snapshot.data!.docs

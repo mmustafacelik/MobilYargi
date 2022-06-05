@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -19,6 +21,7 @@ class _ConversationPageState extends State<ConversationPage> {
   void initState() {
     _ref = FirebaseFirestore.instance
         .collection("conversations/${widget.conversationID}/messages");
+
     super.initState();
   }
 
